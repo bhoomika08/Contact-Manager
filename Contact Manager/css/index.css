@@ -1,0 +1,46 @@
+#mainContainer{
+	width: 100%;
+	padding: 10px;
+}
+
+label input{
+	border: solid 1px #cacaca;
+	padding: 5px 10px;
+	margin-right: 10px;
+	width: 200px;
+}
+
+.result-container {
+  padding: 20px;
+}
+
+.search-bar{
+	margin-top: 20px;
+	padding: 10px;
+}
+
+.user-data-block{
+	float: left;
+	border: solid 1px;
+	padding: 10px;
+	margin: 5px;
+}
+
+button{
+	width: 120px;
+	height: 30px;
+	font-size: 16px;
+	background: green;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+}
+
+.delete{
+	background: red;
+	font-size: 13px;
+	margin-top: 10px;
+	padding: 5px 10px;
+	width: auto;
+}
+
