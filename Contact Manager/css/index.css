@@ -68,12 +68,22 @@ label input{
 	left: 250px;
 }
 
-.navLabel {
-	margin: 10px;
+.pageEntries {
+	position: fixed;
+  bottom: 40px;
+	left: 250px;
 }
 
-.pageEntries {
-	margin-top: 10px;
+.controls a {
+  padding: 3px;
+  border: 1px solid gray;
+  margin: 2px;
+  color: black;
+	text-decoration: none;
+	cursor: pointer; 
+}
+.active {
+  background: rgb(154, 154, 224);
 }
 
 .legend { list-style: none; float: right; }

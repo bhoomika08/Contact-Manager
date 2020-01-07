@@ -3,8 +3,6 @@ class DataStorage {
   }
   static contacts = [];
   static filteredContacts = [];
-  static filteredLocalStorage = [];
-  static contactsLocalStorage = [];
 
   static add(contactData) {
     DataStorage.contacts.push(new Contact(contactData));
@@ -17,6 +15,12 @@ class DataStorage {
         return true;
       }
     });
+    if(DataStorage.contacts.length == 0) {
+      localStorage.removeItem("contacts");
+    } else {
+      localStorage.setItem("contacts", JSON.stringify(DataStorage.contacts));
+    }
+    
   }
 
   static filter(searchText, filterTypeOption) {

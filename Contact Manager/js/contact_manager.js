@@ -30,8 +30,10 @@ class ContactManager {
     this.$name = $(selectors.nameInput);
     this.$email = $(selectors.emailInput);
     this.$contactType = $(selectors.contactType);
+    this.$paginationDiv = $(selectors.paginationDiv);
     this.$prevNavigation = $(selectors.prevNavigation);
     this.$nextNavigation = $(selectors.nextNavigation);
+    this.$pageEntriesDiv = $(selectors.pageEntriesDiv);
     this.$entriesPerPage = $(selectors.entriesPerPage);
   }
 
@@ -46,7 +48,8 @@ class ContactManager {
       DataStorage.contacts = JSON.parse(localStorage.getItem('contacts'));
       this.showFilteredContacts();
     } else {
-      DataStorage.contacts = [];
+      window.location.hash = '';
+      this.$viewButtons.removeClass("button-selected");
     }
     this.getQueryParams();
   }
@@ -205,10 +208,15 @@ class ContactManager {
     this.$email.val('');
     this.$search.val('');
     this.$contactType.find('option:first').prop('selected', true);
+    window.location.hash = '';
   }
 
   deleteContact(contactId) {
     DataStorage.delete(contactId);
+    if(DataStorage.contacts.length == 0) {
+      this.$paginationDiv.hide();
+      this.$pageEntriesDiv.hide();
+    }
   }
 
   filterContacts() {
@@ -235,9 +243,8 @@ class ContactManager {
         break;
       }
       default: {
-        if(DataStorage.contacts.length >= 1) {
-          this.$gridButton.addClass("button-selected");
-        }
+        this.$gridButton.addClass("button-selected");
+        this.setQueryParam({view: "grid"});
         var view = new Grid();
         break;
       }
@@ -245,38 +252,60 @@ class ContactManager {
     var documentFragment = view.getContacts();
     this.$resultContainer.append(documentFragment);
     if(DataStorage.contacts.length >= 1) {
-      $(".pagination").show();
+      this.$paginationDiv.show();
+      this.$pageEntriesDiv.show();
     }
     this.pagination();
   }
 
   pagination() {
-    let entriesPerPage = parseInt(this.$entriesPerPage.val(), 10); 
-    let $entries = this.$resultContainer.children().children();
-    $entries.filter(`:gt(${entriesPerPage - 1})`).hide();
-    $entries.filter(`:lt(${entriesPerPage})`).addClass('active');
+    this.$paginationDiv.empty();
+    this.$entries = this.$resultContainer.children().children();
+    let show_per_page = parseInt(this.$entriesPerPage.val(), 10);
+    let number_of_items = this.$entries.length;
+    let number_of_pages = Math.ceil(number_of_items / show_per_page);
 
-    this.$nextNavigation.click(() => {
-      let index = $entries.index($entries.filter('.active:last')) || 0;
-      let $toHighlight = $entries.slice(index + 1, index + (entriesPerPage + 1));
-      if ($toHighlight.length == 0) {
-        return;
-      }
-      $entries.filter('.active').removeClass('active').hide();
-      $toHighlight.show().addClass('active')
-    });
-    
-    this.$prevNavigation.click(() => {
-      let index = $entries.index($entries.filter('.active:first')) || 0;
+    $('#current_page').val(0);
+    $('#show_per_page').val(show_per_page);
 
-      let start = index < (entriesPerPage - 1) ? 0 : index - entriesPerPage;
-      let $toHighlight = $entries.slice(start, start + entriesPerPage);
-      if ($toHighlight.length == 0) {
-        return;
-      }      
-      $entries.filter('.active').removeClass('active').hide();
-      $toHighlight.show().addClass('active')
-    });
+    let $prev_navigation = Helper.createAnchorTag({class:"prev", text: "Prev"}, {}, this.goToPreviousPage.bind(this));
+    this.$paginationDiv.append($prev_navigation);
+    var current_page = 0;
+    while (number_of_pages > current_page) {
+      let $page = Helper.createAnchorTag({class: "page", text: `${current_page + 1}`}, {longdesc: `${current_page}`}, this.goToPage.bind(this), current_page);
+      this.$paginationDiv.append($page);
+      current_page++;
+    }
+    let $next_navigation = Helper.createAnchorTag({class:"next", text: "Next"}, {}, this.goToNextPage.bind(this));
+    this.$paginationDiv.append($next_navigation);
+
+    $('.pagination .page:first').addClass('active');
+    this.$entries.css('display', 'none');
+    this.$entries.slice(0, show_per_page).css('display', 'block');
+  }
+
+  goToPage(page_num) {
+    let show_per_page = parseInt($('#show_per_page').val(), 0);
+    let start_from = page_num * show_per_page;
+    let end_on = start_from + show_per_page;
+  
+    this.$entries.css('display', 'none').slice(start_from, end_on).css('display', 'block');
+    $(`[data-longdesc='${page_num}']`).addClass('active').siblings('.active').removeClass('active');
+    $('#current_page').val(page_num);
+  }
+
+  goToPreviousPage() {
+    let new_page = parseInt($('#current_page').val(), 0) - 1;
+    if ($('.active').prev('.page').length == true) {
+        this.goToPage(new_page);
+    }
+  }
+  
+  goToNextPage() {
+    let new_page = parseInt($('#current_page').val(), 0) + 1;
+    if ($('.active').next('.page').length == true) {
+        this.goToPage(new_page);
+    }
   }
 }
 
@@ -296,8 +325,9 @@ class ContactManager {
     gridButton : '#grid',
     listButton: '#list',
     compactButton: '#compact',
-    prevNavigation: '#prev',
-    nextNavigation: '#next',
+    paginationDiv: '.pagination',
+    currentPage: '#currentPage',
+    pageEntriesDiv: ".pageEntries",
     entriesPerPage: '[data-entries]',
   },
   contactManager = new ContactManager(selectors);
