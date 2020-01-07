@@ -15,15 +15,34 @@
       <button class="add-contact-btn" id="add-btn">Add Contact</button>
       <div class="search-bar">
         <label>Search <input type="text" id="search"/></label>
+        <select class="selected type" id="typeFilter" data-filter="type">
+          <option name="type" value="type" selected="true">Type</option>
+          <option name="employee" value="employee">Employee</option>
+          <option name="customer" value="customer">Customer</option>
+        </select>
       </div>
       <div class="view-div">
-        <button id="grid" class="view" data-id="grid"> GRID VIEW </button>
-        <button id="list" class="view" data-id="list"> LIST VIEW </button>
-        <button id="compact" class="view" data-id="compact"> COMPACT VIEW </button>
+        <button id="grid" class="view" data-view="grid"> GRID VIEW </button>
+        <button id="list" class="view" data-view="list"> LIST VIEW </button>
+        <button id="compact" class="view" data-view="compact"> COMPACT VIEW </button>
+        <ul class=legend></ul>
       </div>
       <div class="result-container"></div>
+      <div class="pagination hidden">
+        <a href='#' id='prev' class="navLabel">Prev</a>
+        <a href='#' id='next' class="navLabel">Next</a>
+        <div class="pageEntries">
+          <label>Entries per Page:</label>
+          <select data-entries="entriesPerPage">
+            <option name="three" value="3">3</option>
+            <option name="five" value="5">5</option>
+            <option name="six" value="6">6</option>
+          </select>
+        </div>
+      </div>
     </div>
     <script src="lib/jquery-3.3.1.js"></script>
+    <script src="js/data_storage.js" type="text/javascript"></script>
     <script src="js/grid_view.js" type="text/javascript"></script>
     <script src="js/list_view.js" type="text/javascript"></script>
     <script src="js/compact_view.js" type="text/javascript"></script>

@@ -1,17 +1,17 @@
 class Compact {
-  constructor(filteredContacts) {
-    this.filteredContacts = filteredContacts;
+  constructor() {
   }
 
   getContacts() {
-    let documentFragment = document.createDocumentFragment(),
-      $table = $('<table>'),
-      $contactContainer = '',
-      $contactInfo = '',
-      $deleteButtonContainer = '',
-      $deleteButton = '' ;
+    var documentFragment = document.createDocumentFragment();
+
+    let $table = $('<table>'),
+        $contactContainer = '',
+        $contactInfo = '',
+        $deleteButtonContainer = '',
+        $deleteButton = '' ;
   
-    $.each(this.filteredContacts, function() {
+    $.each(DataStorage.filteredContacts, function() {
       $contactContainer = $('<tr>');
       $contactInfo = $('<td>').text(this.name).hover(() => {
         $(event.target).text(this.email);
@@ -25,11 +25,11 @@ class Compact {
       
       switch(this.type) {
         case "employee": {
-          $contactInfo.css("background","lightblue");
+          $contactInfo.css("background","yellow");
           break;
         }
         case "customer": {
-          $contactInfo.css("background","yellow");
+          $contactInfo.css("background","lightblue");
           break;
         }
       }
@@ -39,6 +39,28 @@ class Compact {
       $table.append($contactContainer);
       documentFragment.append($table[0]);
     });
+
+    return documentFragment;
+  }
+
+  getLegends() {
+    var documentFragment = document.createDocumentFragment();
+    let $employeeLegend = $("<li>", {
+      text: " Employee",
+    });
+    let $employeeSpan = $("<span>", {
+      class: "employee",
+    });
+    let $customerLegend = $("<li>", {
+      text: " Customer",
+    });
+    let $customerSpan = $("<span>", {
+      class: "customer",
+    });
+
+    $employeeLegend.append($employeeSpan);
+    $customerLegend.append($customerSpan);
+    documentFragment.append($customerLegend[0], $employeeLegend[0]);
     return documentFragment;
   }
 }

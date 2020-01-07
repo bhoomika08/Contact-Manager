@@ -1,6 +1,11 @@
 #mainContainer{
-	width: 100%;
+	width: 800px;
+	height: 600px;
 	padding: 10px;
+}
+
+.hidden {
+	display: none;
 }
 
 label input{
@@ -10,12 +15,8 @@ label input{
 	width: 200px;
 }
 
-/* select {
-	display: none
-} */
-
 .result-container {
-  padding: 20px;
+  margin-top: 20px;
 }
 
 .search-bar{
@@ -60,3 +61,24 @@ label input{
   width: 200px;
   text-align: center;
 }
+
+.pagination {
+	position: fixed;
+  bottom: 80px;
+	left: 250px;
+}
+
+.navLabel {
+	margin: 10px;
+}
+
+.pageEntries {
+	margin-top: 10px;
+}
+
+.legend { list-style: none; float: right; }
+.legend li { float: right; margin: 10px;}
+.legend span { border: 1px solid #ccc; float: left; width: 15px; height: 15px; margin-right: 5px; }
+.legend .employee { background-color: yellow; }
+.legend .customer { background-color: lightblue; }
+

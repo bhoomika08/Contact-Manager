@@ -1,6 +1,5 @@
 class List {
-  constructor(filteredContacts) {
-    this.filteredContacts = filteredContacts;
+  constructor() {
   }
 
   getContacts() {
@@ -9,20 +8,22 @@ class List {
       $contactContainer = '',
       $contactName = '',
       $contactEmail = '',
+      $contactType = '',
       $deleteButtonContainer = '',
       $deleteButton = '' ;
 
-    $.each(this.filteredContacts, function() {
+    $.each(DataStorage.filteredContacts, function() {
       $contactContainer = $('<tr>');
       $contactName = $('<td>').text(this.name).addClass('listElement');
       $contactEmail = $('<td>').text(this.email).addClass('listElement');
+      $contactType = $('<td>').text(this.type).addClass('listElement');
       $deleteButtonContainer = $('<td>').addClass('listElement');
       $deleteButton = $('<button>', {'data-id': "deleteButton", 'data-contact-id': this.id})
                       .text('DELETE')
                       .addClass('delete');
 
       $deleteButtonContainer.append($deleteButton);
-      $contactContainer.append($contactName, $contactEmail, $deleteButtonContainer);
+      $contactContainer.append($contactName, $contactEmail, $contactType, $deleteButtonContainer);
       $list.append($contactContainer);
       documentFragment.append($list[0]);
     });
